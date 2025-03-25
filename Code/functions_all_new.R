@@ -1,6 +1,5 @@
 
 
-
 ######################################################
 ###### 1. Functions for GEV components
 ######################################################
@@ -464,7 +463,7 @@ get_intensity_list <- function(lambda, size_A, centroids_count_list, fe_pp=NULL)
 
 hpp_likelihood_2 <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
   covparms <- c( (alpha_l),(lambda_l), 0)
-  NNarray <- find_ordered_nn((coords),neigh)
+  NNarray <- find_ordered_nn((locsord),neigh)
   loglik <- vecchia_meanzero_loglik( covparms, "exponential_isotropic",
                                      lambda-intercept,
                                      (coords), NNarray )
@@ -474,7 +473,7 @@ hpp_likelihood_2 <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
 # for RE
 hpp_likelihood_2_time <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
   covparms <- c( (alpha_l),(lambda_l), 0)
-  NNarray_time <- find_ordered_nn(matrix(1:21, ncol=1),neigh)
+  NNarray_time <- find_ordered_nn(locsord_time,neigh)
   loglik <- vecchia_meanzero_loglik( covparms, "exponential_isotropic",
                                      lambda-intercept,
                                      (matrix(1:21, ncol=1)), NNarray_time )
@@ -2346,7 +2345,5 @@ test_likelihood <- function(sim){
                               fe_mu[sim,], g_d_func_list)
   return(test_gev)
 }
-
-
 
 
