@@ -36,6 +36,12 @@ phi_medium=50
 phi_short=10
 neigh <- 5
 
+# For Vecchia approximation:
+ord <- order_maxmin(coords) # calculate an ordering
+locsord <- coords[ord,] # reorder locations
+ord_time <- order_maxmin(matrix(1:21, ncol=1)) # calculate an ordering
+locsord_time <- matrix(1:21, ncol=1)[ord_time,] # reorder locations
+
 ## g_func
 
 
@@ -333,7 +339,4 @@ abline(v=which.max(log_posteriors[burn_in:sim]))
 plot(log_posteriors_2[burn_in:sim], type='l')
 plot(log_posteriors_3[burn_in:sim], type='l')
 plot(log_posteriors_4[burn_in:sim], type='l')
-
-
-
 
