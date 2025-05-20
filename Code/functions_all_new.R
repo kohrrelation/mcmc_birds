@@ -465,8 +465,8 @@ hpp_likelihood_2 <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
   covparms <- c( (alpha_l),(lambda_l), 0)
   NNarray <- find_ordered_nn((locsord),neigh)
   loglik <- vecchia_meanzero_loglik( covparms, "exponential_isotropic",
-                                     lambda-intercept,
-                                     (coords), NNarray )
+                                     lambda[ord]-intercept,
+                                     (locsord), NNarray )
   return(loglik$loglik)
 }
 
@@ -475,8 +475,8 @@ hpp_likelihood_2_time <- function( alpha_l, lambda_l, lambda, neigh,intercept=0)
   covparms <- c( (alpha_l),(lambda_l), 0)
   NNarray_time <- find_ordered_nn(locsord_time,neigh)
   loglik <- vecchia_meanzero_loglik( covparms, "exponential_isotropic",
-                                     lambda-intercept,
-                                     (matrix(1:21, ncol=1)), NNarray_time )
+                                     lambda[ord_time]-intercept,
+                                     matrix(c(1:21)[ord_time], ncol=1), NNarray_time )
   return(loglik$loglik)
 }
 
@@ -2345,5 +2345,7 @@ test_likelihood <- function(sim){
                               fe_mu[sim,], g_d_func_list)
   return(test_gev)
 }
+
+
 
 
