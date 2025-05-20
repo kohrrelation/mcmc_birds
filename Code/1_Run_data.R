@@ -288,10 +288,10 @@ for (sim in 1:(B-1)){
     function_list_store$log_posteriors_4 <- log_posteriors_4
 
 
-    save(function_list_store, sim, ind_latent_gp, ind_intercept, ind_fe, ind_share, coords, delta,
-         stepsize, stepsize_intercept, stepsize_fe, stepsize_share, ind_hyper_pp, ind_hyper_pp2, ind_hyper_mu,
-           ind_hyper_sigma, ind_hyper_re, ind_hyper_bin,
-         file=paste0('./Output/', mcmc.no, '/mcmc_data_', mcmc.no, '_', species.no, '.RData'))
+    # save(function_list_store, sim, ind_latent_gp, ind_intercept, ind_fe, ind_share, coords, delta,
+    #      stepsize, stepsize_intercept, stepsize_fe, stepsize_share, ind_hyper_pp, ind_hyper_pp2, ind_hyper_mu,
+    #        ind_hyper_sigma, ind_hyper_re, ind_hyper_bin,
+    #      file=paste0('./Output/', mcmc.no, '/mcmc_data_', mcmc.no, '_', species.no, '.RData'))
   }
 }
 
@@ -306,8 +306,6 @@ end_time - start_time
 #### Some basic plots #######
 ########################
 
-
-#load(paste0('/Users/jon/Desktop/Revision_RSS/Code_Data/Output/1/mcmc_data_1_', species.no, '.RData'))
 
 burn_in <- 1
 
