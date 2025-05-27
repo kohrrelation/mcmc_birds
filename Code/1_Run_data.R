@@ -41,6 +41,9 @@ ord <- order_maxmin(coords) # calculate an ordering
 locsord <- coords[ord,] # reorder locations
 ord_time <- order_maxmin(matrix(1:21, ncol=1)) # calculate an ordering
 locsord_time <- matrix(1:21, ncol=1)[ord_time,] # reorder locations
+NNarray <- find_ordered_nn((locsord),neigh)
+NNarray_time <- find_ordered_nn(locsord_time,neigh)
+
 
 ## g_func
 
@@ -299,7 +302,7 @@ end_time <- Sys.time()
 
 end_time - start_time
 
-# ~6.28 sec/iteration !
+# ~6.28 sec/iteration on old laptop, 3.24 on a new laptop (apple macbook pro M4) !
 
 
 ########################
@@ -337,4 +340,5 @@ abline(v=which.max(log_posteriors[burn_in:sim]))
 plot(log_posteriors_2[burn_in:sim], type='l')
 plot(log_posteriors_3[burn_in:sim], type='l')
 plot(log_posteriors_4[burn_in:sim], type='l')
+
 
