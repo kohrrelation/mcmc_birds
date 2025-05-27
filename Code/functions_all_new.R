@@ -463,7 +463,6 @@ get_intensity_list <- function(lambda, size_A, centroids_count_list, fe_pp=NULL)
 
 hpp_likelihood_2 <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
   covparms <- c( (alpha_l),(lambda_l), 0)
-  NNarray <- find_ordered_nn((locsord),neigh)
   loglik <- vecchia_meanzero_loglik( covparms, "exponential_isotropic",
                                      lambda[ord]-intercept,
                                      (locsord), NNarray )
@@ -473,7 +472,6 @@ hpp_likelihood_2 <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
 # for RE
 hpp_likelihood_2_time <- function( alpha_l, lambda_l, lambda, neigh,intercept=0){
   covparms <- c( (alpha_l),(lambda_l), 0)
-  NNarray_time <- find_ordered_nn(locsord_time,neigh)
   loglik <- vecchia_meanzero_loglik( covparms, "exponential_isotropic",
                                      lambda[ord_time]-intercept,
                                      matrix(c(1:21)[ord_time], ncol=1), NNarray_time )
@@ -1077,9 +1075,9 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                               fe_mu[sim,], g_d_func_list)
 
   #sum(test_gev$loglik)
-  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", coords, NNarray)
+  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", locsord, NNarray)
 
-  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp[sim,], NNarray) , NNarray)
+  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp[sim,ord], NNarray) , NNarray)
 
 
   ## DONT FORGET THE CHAIN RULE
@@ -1114,7 +1112,7 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                 sigma=exp(beta_sigma[sim,]+x_sigma[sim,]), xi=beta_xi[sim,], constant=0,
                                 fe_mu[sim,], g_d_func_list)
 
-  grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp[sim+1,], NNarray) , NNarray)
+  grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp[sim+1,ord], NNarray) , NNarray)
 
 
   prop_density_1 <- sum(dnorm(x_pp[sim,],
@@ -1200,9 +1198,9 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                      fe_mu[sim,], g_d_func_list)
 
 
-  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", coords, NNarray)
+  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", locsord, NNarray)
 
-  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp_2[sim,], NNarray) , NNarray)
+  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp_2[sim,ord], NNarray) , NNarray)
 
 
   like_loop <- (test_pp$loglik_d)
@@ -1256,7 +1254,7 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
     log_d_pp2[j] <- sum( like_loop* chain[j,])
   }
 
-  grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp_2[sim+1,], NNarray) , NNarray)
+  grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_pp_2[sim+1,ord], NNarray) , NNarray)
 
   prop_density_1 <- sum(dnorm(x_pp_2[sim,], mean=x_pp_2[sim+1,]+delta[2]^2/2*(beta_share[sim,4]*test_2$loglik_d+
                                                                                 log_d_pp2+test_gev_2$loglik_d+grad_prior_2)*hess, sd=delta[2]*sqrt(hess), log=TRUE))
@@ -1327,9 +1325,9 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                      sigma=exp(beta_sigma[sim,]+x_sigma[sim,]), xi=beta_xi[sim,], constant=0,
                                      fe_mu[sim,], g_d_func_list)
 
-  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", coords, NNarray)
+  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", locsord, NNarray)
 
-  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_mu[sim,], NNarray) , NNarray)
+  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_mu[sim,ord], NNarray) , NNarray)
 
   for (j in 1:n.sites) {
     x_mu[sim+1,j] <- rnorm(1, mean=x_mu[sim,j]+delta[3]^2/2*( test_gev$loglik_d[j]+grad_prior_1[j])*hess[1], sd=delta[3]*sqrt(hess[1]))
@@ -1355,7 +1353,7 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                        sigma=exp(beta_sigma[sim,]+x_sigma[sim,]), xi=beta_xi[sim,], constant=0,
                                        fe_mu[sim,], g_d_func_list)
 
-    grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_mu[sim+1,], NNarray) , NNarray)
+    grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_mu[sim+1,ord], NNarray) , NNarray)
 
 
     prop_density_1 <- sum(dnorm(x_mu[sim,], mean=x_mu[sim+1,]+delta[3]^2/2*(test_gev_2$loglik_d+grad_prior_2)*hess, sd=delta[3]*sqrt(hess), log=TRUE))
@@ -1411,9 +1409,9 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                    sigma=exp(beta_sigma[sim,]+x_sigma[sim,]), xi=beta_xi[sim,], constant=0,
                                    fe_mu[sim,])
 
-  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", coords, NNarray)
+  L_inv <- vecchia_Linv(covparms, "exponential_isotropic", locsord, NNarray)
 
-  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_sigma[sim,], NNarray) , NNarray)
+  grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_sigma[sim,ord], NNarray) , NNarray)
 
   ##CHAIN RULE dont forget
   for (j in 1:n.sites) {
@@ -1439,7 +1437,7 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                      sigma=exp(beta_sigma[sim,]+x_sigma[sim+1,]), xi=beta_xi[sim,], constant=0,
                                      fe_mu[sim,])
 
-    grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_sigma[sim+1,], NNarray) , NNarray)
+    grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, x_sigma[sim+1,ord], NNarray) , NNarray)
 
 
     prop_density_1 <- sum(dnorm(x_sigma[sim,], mean=x_sigma[sim+1,]+delta[5]^2/2*(exp(beta_sigma[sim,]+x_sigma[sim+1,])*test_gev_2$loglik_d+grad_prior_2)*hess, sd=delta[5]*sqrt(hess), log=TRUE))
@@ -1990,9 +1988,9 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                 fe_mu[sim,], g_d_func_list)
 
     #sum(test_gev$loglik)
-    L_inv <- vecchia_Linv(covparms, "exponential_isotropic", matrix(1:21,ncol=1), NNarray_time)
+    L_inv <- vecchia_Linv(covparms, "exponential_isotropic", matrix(locsord_time,ncol=1), NNarray_time)
 
-    grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, fe_pp[sim,], NNarray_time) , NNarray_time)
+    grad_prior_1 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, fe_pp[sim,ord_time], NNarray_time) , NNarray_time)
 
 
     ## DONT FORGET THE CHAIN RULE
@@ -2028,7 +2026,7 @@ MCMC_function_GP <- function(sim_ind, hess, delta, stepsize, log_posteriors,
                                   sigma=exp(beta_sigma[sim+1,]+x_sigma[sim+1,]), xi=beta_xi[sim+1,], constant=0,
                                   fe_mu[sim,], g_d_func_list)
 
-    grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, fe_pp[sim+1,], NNarray_time) , NNarray_time)
+    grad_prior_2 <- -Linv_mult( L_inv, Linv_t_mult(L_inv, fe_pp[sim+1,ord_time], NNarray_time) , NNarray_time)
 
 
     prop_density_1 <- sum(dnorm(fe_pp[sim,],
